@@ -1,0 +1,251 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Jouw Laravel API",
+        "description": "Dit is de documentatie voor de Laravel API.",
+        "contact": {
+            "email": "support@jouwapi.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registreer een nieuwe gebruiker",
+                "operationId": "2ede92662926c64983ce38ac036c38bb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "phone",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+31612345678"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Gebruiker succesvol geregistreerd"
+                    },
+                    "400": {
+                        "description": "Validatiefout"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log in met e-mail en wachtwoord",
+                "operationId": "bb659f274a48e6d7962415aa98171318",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succesvolle login"
+                    },
+                    "401": {
+                        "description": "Ongeldige inloggegevens"
+                    }
+                }
+            }
+        },
+        "/api/orders": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Maak een nieuwe bestelling aan (vereist authenticatie)",
+                "operationId": "7fb0a29c25ec922fbd35f200a8f9bfe6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "state",
+                                    "address",
+                                    "orders"
+                                ],
+                                "properties": {
+                                    "state": {
+                                        "type": "string",
+                                        "example": "pending"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main Street"
+                                    },
+                                    "orders": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "products_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "size": {
+                                                    "type": "string",
+                                                    "example": "M"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Bestelling aangemaakt"
+                    },
+                    "400": {
+                        "description": "Ongeldige invoer"
+                    },
+                    "401": {
+                        "description": "Niet geautoriseerd - Bearer Token vereist"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Toon een lijst van producten",
+                "operationId": "02ff70c39a292157f5977ca1275b8ec6",
+                "responses": {
+                    "200": {
+                        "description": "Lijst van producten met paginering"
+                    },
+                    "500": {
+                        "description": "Serverfout"
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Toon een specifiek product",
+                "operationId": "c3a4ff00f8b9746b60aca2d839f0f3ee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID van het product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product gevonden"
+                    },
+                    "404": {
+                        "description": "Product niet gevonden"
+                    },
+                    "500": {
+                        "description": "Serverfout"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Voer hier je Bearer Token in om geautoriseerde verzoeken te maken",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
